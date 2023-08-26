@@ -1,4 +1,4 @@
-import fitz
+from pdf2image import convert_from_path
 from PIL import Image, ImageTk
 import os
 import json
@@ -21,10 +21,10 @@ class DocumentHandler:
         self.current_labeled_data = self.load_labeled_data()
 
         if self.doc_extension == '.pdf':
-            self.doc = fitz.open(document_path)
+            self.doc = convert_from_path(document_path)
         else:
-            self.doc = Image.open(document_path)
-        self.total_pages = len(self.doc) if self.doc_extension == '.pdf' else 1
+            self.doc = [Image.open(document_path)]
+        self.total_pages = len(self.doc)
 
     def next_document(self):
         if self.current_index < len(self.document_paths) - 1:
@@ -37,13 +37,7 @@ class DocumentHandler:
             self.current_page = 0
 
     def get_page_image(self):
-        if self.doc_extension == '.pdf':
-            pix = self.doc.load_page(self.current_page).get_pixmap()
-            image = Image.frombytes(
-                "RGB", [pix.width, pix.height], pix.samples)
-        else:
-            image = self.doc
-        return ImageTk.PhotoImage(image)
+        return self.doc[self.current_page]
 
     def next_page(self):
         if self.current_page < self.total_pages - 1:
