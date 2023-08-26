@@ -5,7 +5,8 @@ import json
 
 
 class DocumentHandler:
-    def __init__(self, document_folder):
+    def __init__(self, document_folder, output_folder):
+        self.output_folder = output_folder
         self.current_page = 0
         self.current_index = 0
         self.document_paths = [
@@ -52,6 +53,8 @@ class DocumentHandler:
 
     def save_labeled_data(self, labeled_data):
         json_file_path = self.get_json_path()
+        if not os.path.exists(self.output_folder):
+            os.makedirs(self.output_folder)
         with open(json_file_path, 'w') as f:
             json.dump(labeled_data, f)
 
@@ -63,5 +66,5 @@ class DocumentHandler:
         return {}
 
     def get_json_path(self):
-        # Replace the document's extension with .json
-        return os.path.splitext(self.document_paths[self.current_index])[0] + '.json'
+        filename = os.path.basename(os.path.splitext(self.document_paths[self.current_index])[0]) + '.json'
+        return os.path.join(self.output_folder, filename)

@@ -4,7 +4,7 @@ from PIL import Image, ImageTk
 
 
 class Gui:
-    def __init__(self, master, document_folder):
+    def __init__(self, master, document_folder, output_folder):
         self.master = master
         self.labeled_data = {}
         master.title("Document Labeling Tool")
@@ -42,7 +42,7 @@ class Gui:
 
             row += 1
 
-        self.document_handler = DocumentHandler(document_folder)
+        self.document_handler = DocumentHandler(document_folder, output_folder)
         self.image_label = tk.Label(master)
         self.image_label.grid(row=0, column=2, rowspan=row, columnspan=2)
 

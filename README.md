@@ -40,4 +40,4 @@ pipenv shell
 ## Usage
 Run the script by providing the path to the folder containing the documents as a command-line argument:
 ```bash
-python ./labeler/main.py path/to/your/documents/folder
+python ./labeler/main.py path/to/your/documents/folder path/to/your/output/folder
