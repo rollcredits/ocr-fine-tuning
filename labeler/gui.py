@@ -84,6 +84,7 @@ class Gui:
     def load_document(self):
         self.load_labeled_data()
         self.update_image()
+        self.focus_first_input()
 
     def next_document(self, event=None):
         self.document_handler.next_document()
@@ -128,6 +129,9 @@ class Gui:
         self.page_info_label.config(
             text=f"Page {current_page + 1} of {total_pages}"
         )
+
+    def focus_first_input(self):
+        list(self.entries.values())[0].focus_set()
 
     def next_page(self, event=None):
         self.document_handler.next_page()
