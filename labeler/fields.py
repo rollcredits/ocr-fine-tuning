@@ -1,41 +1,41 @@
 fields = [
     {
-        "key": "vendor_name",
+        "key": "vendorName",
         "label": "Vendor Name:",
         "type": "string"
     },
     {
-        "key": "vendor_street",
+        "key": "vendorStreet",
         "label": "Vendor Street:",
         "type": "string"
     },
     {
-        "key": "vendor_city",
+        "key": "vendorCity",
         "label": "Vendor City:",
         "type": "string"
     },
     {
-        "key": "vendor_state",
+        "key": "vendorState",
         "label": "Vendor State:",
         "type": "string"
     },
     {
-        "key": "vendor_zip",
+        "key": "vendorZip",
         "label": "Vendor Zip:",
         "type": "string"
     },
     {
-        "key": "invoice_num",
+        "key": "invoiceNum",
         "label": "Invoice Number:",
         "type": "string"
     },
     {
-        "key": "order_num",
+        "key": "orderNum",
         "label": "Order Number:",
         "type": "string"
     },
     {
-        "key": "purchase_order_num",
+        "key": "purchaseOrderNum",
         "label": "Purchase Order Number:",
         "type": "string"
     },
@@ -45,18 +45,18 @@ fields = [
         "type": "string"
     },
     {
-        "key": "due_date",
+        "key": "dueDate",
         "label": "Due Date (yyyy-MM-dd):",
         "type": "string"
     },
     {
-        "key": "total_in_cents",
+        "key": "totalInCents",
         "label": "Total in Cents:",
         "type": "number"
     },
     {
-        "key": "credit_card_last_four",
+        "key": "creditCardLastFour",
         "label": "Credit Card Last Four:",
-        "type": "number"
+        "type": "string"
     }
 ]

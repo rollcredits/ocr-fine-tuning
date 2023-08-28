@@ -10,6 +10,7 @@ pdfplumber = "*"
 Pillow = "*"
 argparse = "*"
 pdf2image = "*"
+openai = "*"
 
 [requires]
 python_version = "3.8"

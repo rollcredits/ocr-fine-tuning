@@ -3,6 +3,7 @@ from PIL import Image, ImageTk
 import os
 import json
 
+VALID_EXTENSIONS = ['.pdf', '.png', '.jpg', '.jpeg']
 
 class DocumentHandler:
     def __init__(self, document_folder, output_folder):
@@ -12,6 +13,11 @@ class DocumentHandler:
         self.document_paths = [
             os.path.join(document_folder, f) for f in os.listdir(document_folder)
         ]
+        self.document_paths = list(filter(
+            lambda f: os.path.splitext(f)[1].lower() in VALID_EXTENSIONS,
+            self.document_paths
+        ))
+        self.document_paths.sort()
         self.load_document(self.current_index)
 
     def load_document(self, index):

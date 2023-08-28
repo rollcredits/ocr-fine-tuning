@@ -38,6 +38,12 @@ pipenv shell
 ```
 
 ## Usage
-Run the script by providing the path to the folder containing the documents as a command-line argument:
+Run the labeling app by providing the path to the folder containing the documents and the output folder as command-line arguments:
 ```bash
 python ./labeler/main.py path/to/your/documents/folder path/to/your/output/folder
+```
+
+Submit labels and prompts to OpenAI by providing the path to the output folder from the labeling app and your prompts folder:
+```bash
+python ./openai-submit/main.py path/to/your/output/folder path/to/your/prompts/folder
+```
