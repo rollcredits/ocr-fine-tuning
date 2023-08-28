@@ -1,6 +1,7 @@
 import tkinter as tk
 from document_handler import DocumentHandler
-from PIL import Image, ImageTk
+from PIL import ImageTk
+from fields import fields
 
 
 class Gui:
@@ -13,32 +14,24 @@ class Gui:
         master.bind('<Up>', self.prev_document)
         master.bind('<Down>', self.next_document)
 
-        self.string_vars = {}
-        fields = [
-            ("Vendor Name:", "string"),
-            ("Vendor Address:", "string"),
-            ("Invoice Number:", "string"),
-            ("Order Number:", "string"),
-            ("Purchase Order Number:", "string"),
-            ("Date (yyyy-MM-dd):", "string"),
-            ("Due Date (yyyy-MM-dd):", "string"),
-            ("Total in Cents:", "number"),
-            ("Credit Card Last Four:", "number")
-        ]
+        self.vars = {}
 
         self.entries = {}
         row = 0
-        for label_text, _ in fields:
-            label = tk.Label(master, text=label_text)
+        for field in fields:
+            label = tk.Label(master, text=field["label"])
             label.grid(row=row, column=0)
 
-            string_var = tk.StringVar()
-            string_var.trace_add("write", lambda name, index, mode, sv=string_var: self.autosave(sv))
-            self.string_vars[label_text] = string_var
+            if field["type"] == "number":
+                var = tk.IntVar()
+            else:
+                var = tk.StringVar()
+            var.trace_add("write", lambda name, index, mode, sv=var: self.autosave(sv))
+            self.vars[field["key"]] = var
 
-            entry = tk.Entry(master, textvariable=self.string_vars[label_text])
+            entry = tk.Entry(master, textvariable=self.vars[field["key"]])
             entry.grid(row=row, column=1)
-            self.entries[label_text] = entry
+            self.entries[field["key"]] = entry
 
             row += 1
 
@@ -141,14 +134,17 @@ class Gui:
         self.document_handler.prev_page()
         self.update_image()
 
-    def autosave(self, string_var):
-        for field, sv in self.string_vars.items():
-            if sv == string_var:
-                self.labeled_data[field] = string_var.get()
+    def autosave(self, var):
+        for field, sv in self.vars.items():
+            if sv == var:
+                val = var.get()
+                self.labeled_data[field] = val if val != "" else None
                 self.document_handler.save_labeled_data(self.labeled_data)
                 break
 
     def load_labeled_data(self):
         self.labeled_data = self.document_handler.current_labeled_data
-        for field, string_var in self.string_vars.items():
-            string_var.set(self.labeled_data.get(field, ""))
+        for field, var in self.vars.items():
+            print(field, var)
+            val = self.labeled_data.get(field, "")
+            var.set(val if val is not None else "")
