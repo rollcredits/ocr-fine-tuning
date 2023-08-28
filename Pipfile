@@ -11,6 +11,7 @@ Pillow = "*"
 argparse = "*"
 pdf2image = "*"
 openai = "*"
+python-dotenv = "*"
 
 [requires]
 python_version = "3.8"
