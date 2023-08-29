@@ -23,7 +23,7 @@ def write_to_file_jsonl(filename, data):
 def poll_finetuning_job(job_id, interval=60):
     while True:
         job_status = openai.FineTuningJob.retrieve(job_id)
-        if job_status['status'] == 'completed':
+        if job_status['status'] == 'succeeded':
             print(f"Fine-tuning job {job_id} completed.")
             print(job_status)
             return
@@ -77,19 +77,27 @@ def main(prompt_folder, label_folder):
             purpose='fine-tune'
         )
 
-    time.sleep(10) # wait for file to be ready on OpenAI's end
-
-    if USE_TEST_SET:
-        training_job = openai.FineTuningJob.create(
-            training_file=training_data_file["id"],
-            validation_file=test_data_file["id"],
-            model="gpt-3.5-turbo"
-        )
-    else:
-        training_job = openai.FineTuningJob.create(
-            training_file=training_data_file["id"],
-            model="gpt-3.5-turbo"
-        )
+    attempts = 0
+    while True:
+        try:
+            attempts += 1
+            if USE_TEST_SET:
+                    training_job = openai.FineTuningJob.create(
+                        training_file=training_data_file["id"],
+                        validation_file=test_data_file["id"],
+                        model="gpt-3.5-turbo"
+                    )            
+            else:
+                training_job = openai.FineTuningJob.create(
+                    training_file=training_data_file["id"],
+                    model="gpt-3.5-turbo"
+                )
+            break
+        except Exception as e:
+            print(e)
+            if attempts > 5:
+                raise e
+            time.sleep(10) # file is generally not ready immediately on OpenAI's end
     
     job_id = training_job['id']
     print(f"Fine-tuning job started with ID: {job_id}")

@@ -9,10 +9,10 @@ class Gui:
         self.master = master
         self.labeled_data = {}
         master.title("Document Labeling Tool")
-        master.bind('<Left>', self.prev_page)
-        master.bind('<Right>', self.next_page)
-        master.bind('<Up>', self.prev_document)
-        master.bind('<Down>', self.next_document)
+        master.bind('<Prior>', self.prev_page)    # Page Up
+        master.bind('<Next>', self.next_page)     # Page Down
+        master.bind('<Up>', self.prev_document)   # Up Arrow
+        master.bind('<Down>', self.next_document) # Down Arrow
 
         self.vars = {}
 
