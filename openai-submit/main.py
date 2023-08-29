@@ -2,6 +2,7 @@ import argparse
 import os
 import json
 import random
+import tiktoken
 import openai
 import time
 from dotenv import load_dotenv
@@ -12,6 +13,21 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 USE_TEST_SET=False
 N_EPOCHS=5
 MODEL="gpt-3.5-turbo"
+TIKTOKEN_ENCODING="cl100k_base"
+MAX_TOKENS=3800
+
+def num_tokens_from_messages(messages, tokens_per_message=3, tokens_per_name=1):
+    
+    num_tokens = 0
+    for message in messages:
+        num_tokens += tokens_per_message
+        for key, value in message.items():
+            num_tokens += len(encoding.encode(value))
+            if key == "name":
+                num_tokens += tokens_per_name
+    num_tokens += 3
+    return num_tokens
+
 
 def read_file(folder, filename):
     with open(os.path.join(folder, filename), 'r') as f:
@@ -43,12 +59,18 @@ def main(prompt_folder, label_folder):
 
     training_data = []
     test_data = []
-
+    
+    encoding = tiktoken.get_encoding(TIKTOKEN_ENCODING)
     for prompt_file in prompt_files:
         prompt_content = read_file(prompt_folder, prompt_file)
         label_file = prompt_file.replace('.txt', '.json')
         if label_file in label_files:
             label_content = read_file(label_folder, label_file)
+            encoded = encoding.encode(prompt_content + label_content)
+            if len(encoded) > MAX_TOKENS:
+                print(f"Skipping {prompt_file} because it has {len(encoded)} tokens.")
+                continue
+
             training_example = {
                 "messages": [
                     {"role": "user", "content": prompt_content},

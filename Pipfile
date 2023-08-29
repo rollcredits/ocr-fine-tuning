@@ -12,6 +12,7 @@ argparse = "*"
 pdf2image = "*"
 openai = "*"
 python-dotenv = "*"
+tiktoken = "*"
 
 [requires]
 python_version = "3.8"
