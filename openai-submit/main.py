@@ -11,6 +11,7 @@ load_dotenv()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 USE_TEST_SET=False
 N_EPOCHS=5
+MODEL="gpt-3.5-turbo"
 
 def read_file(folder, filename):
     with open(os.path.join(folder, filename), 'r') as f:
@@ -87,7 +88,7 @@ def main(prompt_folder, label_folder):
                     training_job = openai.FineTuningJob.create(
                         training_file=training_data_file["id"],
                         validation_file=test_data_file["id"],
-                        model="gpt-3.5-turbo",
+                        model=MODEL,
                         hyperparameters={
                             "n_epochs": N_EPOCHS,
                         }
@@ -95,7 +96,7 @@ def main(prompt_folder, label_folder):
             else:
                 training_job = openai.FineTuningJob.create(
                     training_file=training_data_file["id"],
-                    model="gpt-3.5-turbo",
+                    model=MODEL,
                     hyperparameters={
                         "n_epochs": N_EPOCHS,
                     }
