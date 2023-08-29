@@ -10,6 +10,7 @@ load_dotenv()
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 USE_TEST_SET=False
+N_EPOCHS=5
 
 def read_file(folder, filename):
     with open(os.path.join(folder, filename), 'r') as f:
@@ -23,16 +24,17 @@ def write_to_file_jsonl(filename, data):
 def poll_finetuning_job(job_id, interval=60):
     while True:
         job_status = openai.FineTuningJob.retrieve(job_id)
-        if job_status['status'] == 'succeeded':
+        status = job_status['status']
+        if status == 'succeeded':
             print(f"Fine-tuning job {job_id} completed.")
             print(job_status)
             return
-        elif job_status['status'] == 'failed':
-            print(f"Fine-tuning job {job_id} failed.")
-            return
-        else:
+        elif status == 'running':
             print(f"Fine-tuning job {job_id} still in progress. Checking again in {interval} seconds.")
             time.sleep(interval)
+        else:
+            print(f"Fine-tuning job {job_id} failed.")
+            return
 
 def main(prompt_folder, label_folder):
     prompt_files = [f for f in os.listdir(prompt_folder) if f.endswith('.txt')]
@@ -85,12 +87,18 @@ def main(prompt_folder, label_folder):
                     training_job = openai.FineTuningJob.create(
                         training_file=training_data_file["id"],
                         validation_file=test_data_file["id"],
-                        model="gpt-3.5-turbo"
+                        model="gpt-3.5-turbo",
+                        hyperparameters={
+                            "n_epochs": N_EPOCHS,
+                        }
                     )            
             else:
                 training_job = openai.FineTuningJob.create(
                     training_file=training_data_file["id"],
-                    model="gpt-3.5-turbo"
+                    model="gpt-3.5-turbo",
+                    hyperparameters={
+                        "n_epochs": N_EPOCHS,
+                    }
                 )
             break
         except Exception as e:
