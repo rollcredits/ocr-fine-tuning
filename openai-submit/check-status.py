@@ -1,12 +1,12 @@
 import openai
-import os
-from dotenv import load_dotenv
-
-load_dotenv()
-
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+from constants import OPENAI_API_KEY, OPENAI_ORGANIZATION_IDS
         
 if __name__ == '__main__':
   openai.api_key = OPENAI_API_KEY
-  jobs = openai.FineTuningJob.list(limit=10)
+  jobs = []
+  for organization_id in OPENAI_ORGANIZATION_IDS:
+    jobs += openai.FineTuningJob.list(
+      organization=organization_id,
+      limit=10
+    )["data"]
   print(jobs)
