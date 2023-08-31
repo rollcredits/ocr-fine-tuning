@@ -55,8 +55,8 @@ fields = [
         "type": "number"
     },
     {
-        "key": "creditCardLastFour",
-        "label": "Credit Card Last Four:",
+        "key": "creditCardTailDigits",
+        "label": "Credit Card Tail Digits:",
         "type": "string"
     }
 ]
