@@ -80,7 +80,7 @@ Submit labels and prompts to OpenAI to create a fine-tuned model by providing th
 python ./openai-submit/main.py path/to/your/output/folder path/to/your/prompts/folder
 ```
 
-Prompts must be .txt files with filenames matching the document/labeled filename. For example, if your original input file had the filename `my-document.pdf`, your labels for that file will have the filename `my-document.json`, and your prompt should have the filename `my-document.txt`.
+Prompts must be .txt files with filenames matching the document/labeled filename. For example, if your original input file had the filename `my-document.pdf`, your labels for that file will have the filename `my-document.json`, and your prompt should have the filename `my-document.txt`. These prompts should match whatever prompts you expect to supply to OpenAI when asking it to parse your document data.
 
 When running the script, you will have a chance to review the generated training data and test data before it is submitted to the OpenAI API. The generated data will be available in `training_data.jsonl` and `test_data.jsonl`.
 
