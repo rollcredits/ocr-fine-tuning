@@ -35,12 +35,12 @@ pipenv install
 ```bash
 pipenv shell
 ```
-5. Copy the .env.sample to a .env file:
+5. Copy the `.env.sample` to a `.env` file:
 ```bash
 cp .env.sample .env
 ```
-6. Populate the .env file with your OpenAI API key. For organization ID(s), if you are training a model across multiple organizations, you can provide multiple IDs separated by commas.
-7. Copy the fields.json.sample to a fields.json file:
+6. Populate the .env file with your OpenAI API key. For organization ID(s), if you are training a model across multiple organizations, you can provide multiple IDs separated by commas. Additionally, tweak any parameters you may care about (# of training epochs, model to train, etc).
+7. Copy the `fields.json.sample` to a `fields.json` file:
 ```bash
 cp fields.json.sample fields.json
 ```
@@ -69,6 +69,8 @@ When labeling, keyboard navigation can be used.
 2. Arrow Up and Arrow Down navigate to the previous and next file to label.
 
 Output data will be saved to the specified output folder. Labels for each file will be saved with the same file name as the original file, but with the .json extension. For example, an input file with the filename `my-document.pdf` will have labels saved under the name `my-document.json`.
+
+Data is autosaved as you type, and if you close and reopen the GUI tool later then existing labels you have created will be loaded up for each file as long as you specify the same output folder. If you add new fields to your `fields.json`, then you can go back through your files and add labels for just that field!
 
 ### Submitting Labels for Fine-Tuning
 Submit labels and prompts to OpenAI to create a fine-tuned model by providing the following as command line arguments:
