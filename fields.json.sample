@@ -1,0 +1,22 @@
+[
+  {
+    "key": "vendorName",
+    "label": "Vendor Name:",
+    "type": "string"
+  },
+  {
+    "key": "invoiceNum",
+    "label": "Invoice Number:",
+    "type": "string"
+  },
+  {
+    "key": "date",
+    "label": "Date (yyyy-MM-dd):",
+    "type": "string"
+  },
+  {
+    "key": "totalInCents",
+    "label": "Total in Cents:",
+    "type": "number"
+  }
+]

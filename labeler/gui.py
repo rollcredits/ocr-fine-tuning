@@ -1,7 +1,7 @@
 import tkinter as tk
 from document_handler import DocumentHandler
 from PIL import ImageTk
-from fields import fields
+import json
 
 
 class Gui:
@@ -12,12 +12,16 @@ class Gui:
         master.bind('<Prior>', self.prev_page)    # Page Up
         master.bind('<Next>', self.next_page)     # Page Down
         master.bind('<Up>', self.prev_document)   # Up Arrow
-        master.bind('<Down>', self.next_document) # Down Arrow
+        master.bind('<Down>', self.next_document)  # Down Arrow
 
         self.vars = {}
 
         self.entries = {}
         row = 0
+
+        with open("fields.json") as fields_file:
+            fields = json.load(fields_file)
+
         for field in fields:
             label = tk.Label(master, text=field["label"])
             label.grid(row=row, column=0)
@@ -26,7 +30,8 @@ class Gui:
                 var = tk.IntVar()
             else:
                 var = tk.StringVar()
-            var.trace_add("write", lambda name, index, mode, sv=var: self.autosave(sv))
+            var.trace_add("write", lambda name, index,
+                          mode, sv=var: self.autosave(sv))
             self.vars[field["key"]] = var
 
             entry = tk.Entry(master, textvariable=self.vars[field["key"]])
@@ -57,12 +62,12 @@ class Gui:
         row += 1
 
         self.prev_button = tk.Button(
-            master, text="Previous", command=self.prev_document
+            master, text="Previous Doc", command=self.prev_document
         )
         self.prev_button.grid(row=row, column=0)
 
         self.next_button = tk.Button(
-            master, text="Next", command=self.next_document
+            master, text="Next Doc", command=self.next_document
         )
         self.next_button.grid(row=row, column=1)
 
@@ -89,13 +94,13 @@ class Gui:
 
     def update_image(self):
         img = self.document_handler.get_page_image()
-    
+
         # Get current dimensions
         base_height = img.height
         base_width = img.width
-        
+
         # Define max dimensions
-        max_height = 900
+        max_height = 800
         max_width = 1000
 
         # Calculate new dimensions
@@ -107,7 +112,7 @@ class Gui:
             else:
                 new_width = max_width
                 new_height = int(new_width / aspect_ratio)
-            
+
             # Resize image
             img = img.resize((new_width, new_height))
 
