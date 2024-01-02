@@ -3,9 +3,7 @@ import os
 import json
 import random
 import tiktoken
-import openai
-import time
-from constants import OPENAI_API_KEY, OPENAI_ORGANIZATION_IDS, USE_TEST_SET, N_EPOCHS, MODEL, MAX_TOKENS
+from constants import USE_TEST_SET, MAX_TOKENS
 
 TIKTOKEN_ENCODING = "cl100k_base"
 
@@ -54,60 +52,7 @@ def main(prompt_folder, label_folder):
     write_to_file_jsonl('training_data.jsonl', training_data)
     write_to_file_jsonl('test_data.jsonl', test_data)
 
-    user_input = input(
-        "Check the training and test data. Type 'y' to proceed: ")
-    if user_input != 'y':
-        print("Operation cancelled.")
-        return
-
-    openai.api_key = OPENAI_API_KEY
-
-    for organization_id in OPENAI_ORGANIZATION_IDS:
-        training_data_file = openai.File.create(
-            organization=organization_id,
-            file=open("training_data.jsonl", "rb"),
-            purpose='fine-tune'
-        )
-        if USE_TEST_SET:
-            test_data_file = openai.File.create(
-                organization=organization_id,
-                file=open("test_data.jsonl", "rb"),
-                purpose='fine-tune'
-            )
-
-        attempts = 0
-        while True:
-            try:
-                attempts += 1
-                if USE_TEST_SET:
-                    training_job = openai.FineTuningJob.create(
-                        organization=organization_id,
-                        training_file=training_data_file["id"],
-                        validation_file=test_data_file["id"],
-                        model=MODEL,
-                        hyperparameters={
-                            "n_epochs": N_EPOCHS,
-                        }
-                    )
-                else:
-                    training_job = openai.FineTuningJob.create(
-                        organization=organization_id,
-                        training_file=training_data_file["id"],
-                        model=MODEL,
-                        hyperparameters={
-                            "n_epochs": N_EPOCHS,
-                        }
-                    )
-                break
-            except Exception as e:
-                print(e)
-                if attempts > 5:
-                    raise e
-                # file is generally not ready immediately on OpenAI's end, so wait and retry
-                time.sleep(10)
-
-        job_id = training_job['id']
-        print(f"Fine-tuning job started with ID: {job_id}")
+    print("Wrote out data files! You can submit them through the OpenAI fine tuning UI: https://platform.openai.com/finetune")
 
 
 if __name__ == '__main__':
